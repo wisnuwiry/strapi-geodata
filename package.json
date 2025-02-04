@@ -1,0 +1,82 @@
+{
+  "version": "0.0.1",
+  "keywords": [],
+  "type": "commonjs",
+  "exports": {
+    "./package.json": "./package.json",
+    "./strapi-admin": {
+      "types": "./dist/admin/src/index.d.ts",
+      "source": "./admin/src/index.ts",
+      "import": "./dist/admin/index.mjs",
+      "require": "./dist/admin/index.js",
+      "default": "./dist/admin/index.js"
+    },
+    "./strapi-server": {
+      "types": "./dist/server/src/index.d.ts",
+      "source": "./server/src/index.ts",
+      "import": "./dist/server/index.mjs",
+      "require": "./dist/server/index.js",
+      "default": "./dist/server/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "strapi-plugin build",
+    "watch": "strapi-plugin watch",
+    "watch:link": "strapi-plugin watch:link",
+    "verify": "strapi-plugin verify",
+    "test:ts:front": "run -T tsc -p admin/tsconfig.json",
+    "test:ts:back": "run -T tsc -p server/tsconfig.json"
+  },
+  "dependencies": {
+    "@strapi/design-system": "^2.0.0-rc.15",
+    "@strapi/icons": "^2.0.0-rc.15",
+    "geojson-validation": "^1.0.2",
+    "leaflet": "^1.9.4",
+    "ngeohash": "^0.6.3",
+    "react-intl": "^7.1.5",
+    "react-leaflet": "^4.2.1"
+  },
+  "devDependencies": {
+    "@strapi/sdk-plugin": "^5.3.0",
+    "@strapi/strapi": "^5.9.0",
+    "@strapi/typescript-utils": "^5.9.0",
+    "@types/leaflet": "^1.9.16",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "prettier": "^3.4.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.29.0",
+    "styled-components": "^6.1.14",
+    "typescript": "^5.7.3"
+  },
+  "peerDependencies": {
+    "@strapi/sdk-plugin": "^5.3.0",
+    "@strapi/strapi": "^5.9.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.29.0",
+    "styled-components": "^6.1.14"
+  },
+  "strapi": {
+    "kind": "plugin",
+    "name": "strapi-location-picker",
+    "displayName": "Strapi Location Picker",
+    "description": "Strapi plugin for selecting and searching locations with an interactive map picker."
+  },
+  "name": "strapi-location-picker",
+  "description": "Strapi plugin for selecting and searching locations with an interactive map picker.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/wisnuwiry/strapi-geodata.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wisnuwiry/strapi-geodata/issues"
+  },
+  "homepage": "https://github.com/wisnuwiry/strapi-geodata#readme",
+  "author": "Wisnu G. Saputra <wisnuwiry@gmail.com>"
+}
