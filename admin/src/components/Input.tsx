@@ -74,7 +74,7 @@ const Input: React.FC<InputProps> = ({ hint, labelAction, label, name, required,
   async function searchLocation(e: React.MouseEvent) {
     let search = searchRef.current?.value;
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${search}&format=json`
+      `https://nominatim.openstreetmap.org/search?q=${search}&format=jsonv2`
     );
     const data = await response.json();
     if (data.length > 0) {
