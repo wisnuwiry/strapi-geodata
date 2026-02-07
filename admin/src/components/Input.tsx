@@ -102,7 +102,7 @@ const Input: React.FC<InputProps> = ({ hint, labelAction, label, name, required,
 
         <Box style={{ display: 'grid', gridTemplateColumns: '4fr 1fr', gap: '8px' }}>
           <TextInput ref={searchRef} name="search" placeholder="Address to search" />
-          <Button onClick={searchLocation} size="l">
+          <Button onClick={searchLocation} size="L">
             Search
           </Button>
         </Box>
