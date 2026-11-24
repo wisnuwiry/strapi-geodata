@@ -1,5 +1,12 @@
 # CHANGELOG.md
 
+## Unreleased
+
+- Add configurable CARTO Basemaps API key support via `cartoApiKey` in the plugin
+  configuration, keeping `light_all` as the default basemap.
+- Display a message when map configuration is missing or cannot be loaded, and
+  include OpenStreetMap and CARTO attribution.
+
 ## 0.0.3 (2026-03-11)
 
 Fix:

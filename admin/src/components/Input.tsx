@@ -7,8 +7,10 @@ import { Box, Typography, JSONInput, TextInput, Button } from '@strapi/design-sy
 
 import 'leaflet/dist/leaflet.css';
 import { Field } from '@strapi/design-system';
-import { useField } from '@strapi/strapi/admin';
+import { useField, useFetchClient } from '@strapi/strapi/admin';
 import { Accordion } from '@strapi/design-system';
+import { PLUGIN_ID } from '../pluginId';
+import { getCartoTileUrl } from '../utils/carto';
 
 const iconUrl = 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png';
 const iconRetinaUrl = 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png';
@@ -38,17 +40,44 @@ interface InputProps {
 const mapProps = {
   zoom: 7,
   center: [41.9, 12.5] as LatLngTuple,
-  tileUrl: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-  tileAttribution: 'OSM attribution',
-  tileAccessToken: '',
+  tileAttribution:
+    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+    '&copy; <a href="https://carto.com/attribution/">CARTO</a>',
 };
 
 const Input: React.FC<InputProps> = ({ hint, labelAction, label, name, required, ...props }) => {
   const field = useField(name);
+  const { get } = useFetchClient();
   const [map, setMap] = useState<any>(null);
   const [location, _setLocation] = useState<any>(props.value);
+  const [tileUrl, setTileUrl] = useState<string | null>(null);
+  const [mapError, setMapError] = useState<string | null>(null);
 
   const searchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    get<{ cartoApiKey: string }>(`/${PLUGIN_ID}/config`)
+      .then(({ data }) => {
+        if (!active) return;
+
+        const url = getCartoTileUrl(data.cartoApiKey);
+        setTileUrl(url);
+        if (!url) {
+          setMapError('A CARTO API key is required to display the map. Contact your administrator.');
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setMapError('The map configuration could not be loaded. Try reloading the page.');
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [get]);
 
   const onMapClick = useCallback(
     (e: LeafletMouseEvent) => {
@@ -112,6 +141,12 @@ const Input: React.FC<InputProps> = ({ hint, labelAction, label, name, required,
           right-click
         </Typography>
 
+        {mapError && (
+          <Typography role="alert" variant="pi" style={{ marginBottom, display }}>
+            {mapError}
+          </Typography>
+        )}
+
         <Box style={{ display: 'flex', height: '300px', width: '100%' }}>
           <Box style={{ width: '100% ' }}>
             <MapContainer
@@ -124,11 +159,7 @@ const Input: React.FC<InputProps> = ({ hint, labelAction, label, name, required,
               ref={setMap}
               style={{ height: '300px', zIndex: 299 }}
             >
-              <TileLayer
-                attribution={mapProps.tileAttribution}
-                url={mapProps.tileUrl}
-                accessToken={mapProps.tileAccessToken}
-              />
+              {tileUrl && <TileLayer attribution={mapProps.tileAttribution} url={tileUrl} />}
               {location && <Marker position={[location?.lat, location?.lng]} icon={customIcon} />}
             </MapContainer>
           </Box>
