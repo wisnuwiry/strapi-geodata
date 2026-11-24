@@ -43,7 +43,44 @@ pnpm install strapi-location-picker
 
 ## 🛠️ Configuration
 
-After installation, enable the plugin and customize the `strapi::security` middleware inside `./config/middlewares.js`
+### CARTO API key
+
+The map uses CARTO's `light_all` basemap. Request a **CARTO Basemaps API key** at
+[carto.com/basemaps/apikey](https://carto.com/basemaps/apikey/), then add it to your
+Strapi application's `.env` file:
+
+```dotenv
+CARTO_API_KEY=your-carto-basemaps-api-key
+```
+
+Configure the plugin in `./config/plugins.js` (or `./config/plugins.ts`):
+
+```js
+export default ({ env }) => ({
+  // ...other plugins
+  'strapi-location-picker': {
+    enabled: true,
+    config: {
+      cartoApiKey: env('CARTO_API_KEY', ''),
+    },
+  },
+});
+```
+
+Restart Strapi after changing the key. The plugin reads it at runtime through an
+authenticated admin endpoint and includes it as the `key` parameter on CARTO tile
+requests. The key is visible to admin users in their browser; use a Basemaps key
+and restrict it to your admin site's hostname in the CARTO dashboard. Do not
+commit your `.env` file.
+
+If the key is missing, Strapi can still start and the field displays a
+configuration message instead of requesting unauthenticated tiles. The basemap
+remains `light_all`; address search continues to use Nominatim.
+
+### Content security policy
+
+Customize the `strapi::security` middleware inside `./config/middlewares.js` to
+allow the map tiles and marker images:
 
 Instead of:
 
